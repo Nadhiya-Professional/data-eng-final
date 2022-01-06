@@ -1,1 +1,1 @@
-apache-beam[gcp]
+apache_beam[gcp]
