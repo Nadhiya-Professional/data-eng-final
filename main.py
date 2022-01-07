@@ -58,17 +58,14 @@ if __name__ == '__main__':
             schema=table_schema,
             create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED
         )
-        output_1 = pipeline | "Read from three tables" >> beam.io.ReadFromBigQuery(query="""select cust.CUST_TIER_CODE,product.SKU,sum(orders.ORDER_AMT) as TOTAL_SALES_AMOUNT from `york-cdf-start.final_input_data.customers` cust 
-                                                                                            join `york-cdf-start.final_input_data.product_views` product 
-                                                                                            on product.CUSTOMER_ID = cust.CUSTOMER_ID
+        output_1 = pipeline | "Read from three tables" >> beam.io.ReadFromBigQuery(query="""select cust.CUST_TIER_CODE,orders.SKU,sum(orders.ORDER_AMT) as TOTAL_SALES_AMOUNT from `york-cdf-start.final_input_data.customers` cust 
                                                                                             join `york-cdf-start.final_input_data.orders` orders
-                                                                                            on cast(product.SKU as integer) = orders.SKU
-                                                                                            group by cust.CUST_TIER_CODE,product.SKU""",
-
+                                                                                            on cust.CUSTOMER_ID = orders.CUSTOMER_ID
+                                                                                            group by cust.CUST_TIER_CODE,orders.SKU""",
                                                                                     project="york-cdf-start",
                                                                                     use_standard_sql=True)
 
-        total_sales_transformed_output = output_1 |beam.ParDo(Transform_order_total())
+        total_sales_transformed_output = output_1 | beam.ParDo(Transform_order_total())
         total_sales_transformed_output | "Write to bigquery second table" >> beam.io.WriteToBigQuery(
             table_spec_sales,
             schema=table_schema_sales,
