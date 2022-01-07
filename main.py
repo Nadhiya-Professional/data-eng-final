@@ -40,7 +40,7 @@ if __name__ == '__main__':
             {'name': 'total_sales_amount', 'type': 'float', 'mode': 'Required'}
         ]
     }
-    pipeline_options = PipelineOptions(region="us-central1", temp_location="gs://york_temp_files",
+    pipeline_options = PipelineOptions(region="us-central1",runner = "DataflowRunner",temp_location="gs://york_temp_files",
                                        project="york-cdf-start", job_name="dataflow-nadhiya12",
                                        staging_location="gs://york_temp_files/staging")
 
