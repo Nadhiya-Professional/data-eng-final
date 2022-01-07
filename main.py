@@ -41,7 +41,7 @@ if __name__ == '__main__':
         ]
     }
     pipeline_options = PipelineOptions(region="us-central1",runner = "DataflowRunner",temp_location="gs://york_temp_files",
-                                       project="york-cdf-start", job_name="dataflow-nadhiya12",
+                                       project="york-cdf-start", job_name="dataflow-nadhiya-final",
                                        staging_location="gs://york_temp_files/staging")
 
     with beam.Pipeline(options=pipeline_options) as pipeline:
