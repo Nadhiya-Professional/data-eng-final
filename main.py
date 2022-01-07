@@ -71,4 +71,4 @@ if __name__ == '__main__':
             schema=table_schema_sales,
             create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED
         )
-    print("Done")
+  
