@@ -19,8 +19,8 @@ if __name__ == '__main__':
 
     table_spec_product = bigquery.TableReference(
         projectId='york-cdf-start',
-        datasetId='n_mathialagan_proj_1',
-        tableId='test')
+        datasetId='final_nadhiya_mathialagan',
+        tableId='cust_tier_code-sku-total_no_of_product_views')
     table_schema = {
         'fields': [
             {'name': 'cust_tier_code', 'type': 'string', 'mode': 'Required'},
@@ -31,8 +31,8 @@ if __name__ == '__main__':
 
     table_spec_sales = bigquery.TableReference(
         projectId='york-cdf-start',
-        datasetId='n_mathialagan_proj_1',
-        tableId='test_sales')
+        datasetId='final_nadhiya_mathialagan',
+        tableId='cust_tier_code-sku-total_sales_amount')
     table_schema_sales = {
         'fields': [
             {'name': 'cust_tier_code', 'type': 'string', 'mode': 'Required'},
