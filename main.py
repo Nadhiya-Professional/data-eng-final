@@ -19,8 +19,8 @@ if __name__ == '__main__':
 
     table_spec_product = bigquery.TableReference(
         projectId='york-cdf-start',
-        datasetId='n_mathialagan_proj_1',
-        tableId='test')
+        datasetId='final_nadhiya_mathialagan',
+        tableId='cust_tier_code-sku-total_no_of_product_views')
     table_schema = {
         'fields': [
             {'name': 'cust_tier_code', 'type': 'string', 'mode': 'Required'},
@@ -31,8 +31,8 @@ if __name__ == '__main__':
 
     table_spec_sales = bigquery.TableReference(
         projectId='york-cdf-start',
-        datasetId='n_mathialagan_proj_1',
-        tableId='test_sales')
+        datasetId='final_nadhiya_mathialagan',
+        tableId='cust_tier_code-sku-total_sales_amount')
     table_schema_sales = {
         'fields': [
             {'name': 'cust_tier_code', 'type': 'string', 'mode': 'Required'},
@@ -58,12 +58,10 @@ if __name__ == '__main__':
             schema=table_schema,
             create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED
         )
-        output_1 = pipeline | "Read from three tables" >> beam.io.ReadFromBigQuery(query="""select cust.CUST_TIER_CODE,product.SKU,sum(orders.ORDER_AMT) as TOTAL_SALES_AMOUNT from `york-cdf-start.final_input_data.customers` cust 
-                                                                                            join `york-cdf-start.final_input_data.product_views` product 
-                                                                                            on product.CUSTOMER_ID = cust.CUSTOMER_ID
+        output_1 = pipeline | "Read from three tables" >> beam.io.ReadFromBigQuery(query="""select cust.CUST_TIER_CODE,orders.SKU,sum(orders.ORDER_AMT) as TOTAL_SALES_AMOUNT from `york-cdf-start.final_input_data.customers` cust 
                                                                                             join `york-cdf-start.final_input_data.orders` orders
-                                                                                            on cast(product.SKU as integer) = orders.SKU
-                                                                                            group by cust.CUST_TIER_CODE,product.SKU""",
+                                                                                            on cust.CUSTMORE_ID = orders.CUSTOMER_ID
+                                                                                            group by cust.CUST_TIER_CODE,orders.SKU""",
 
                                                                                     project="york-cdf-start",
                                                                                     use_standard_sql=True)
