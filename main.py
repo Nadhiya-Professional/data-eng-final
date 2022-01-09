@@ -45,21 +45,21 @@ if __name__ == '__main__':
                                        staging_location="gs://york_temp_files/staging")
 
     with beam.Pipeline(options=pipeline_options) as pipeline:
-        output = pipeline | "Read from first two tables" >> beam.io.ReadFromBigQuery(query=""" select cust.CUST_TIER_CODE,product.SKU, count(*) as total_no_of_product_views from `york-cdf-start.final_input_data.customers` cust 
+        output = pipeline | "Read from customer and product view tables" >> beam.io.ReadFromBigQuery(query=""" select cust.CUST_TIER_CODE,product.SKU, count(*) as total_no_of_product_views from `york-cdf-start.final_input_data.customers` cust 
                                                                                     join `york-cdf-start.final_input_data.product_views` product 
                                                                                     on product.CUSTOMER_ID = cust.CUSTOMER_ID
-                                                                                    group by cust.CUST_TIER_CODE,product.SKU"""
-                                                                                ,project ="york-cdf-start",use_standard_sql=True)
+                                                                                    group by cust.CUST_TIER_CODE,product.SKU""",
+                                                                                project ="york-cdf-start",use_standard_sql=True)
 
-        cust_tier_trasnformed_output = output | beam.ParDo(Transform_cust_tier_code())
+        cust_tier_transformed_output = output | beam.ParDo(Transform_cust_tier_code())
 
-        cust_tier_trasnformed_output | "Write to bigquery" >> beam.io.WriteToBigQuery(
+        cust_tier_transformed_output | "Write to bigquery first table" >> beam.io.WriteToBigQuery(
             table_spec_product,
             schema=table_schema,
             create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
             write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE
         )
-        output_1 = pipeline | "Read from three tables" >> beam.io.ReadFromBigQuery(query="""select cust.CUST_TIER_CODE,orders.SKU,sum(orders.ORDER_AMT) as TOTAL_SALES_AMOUNT from `york-cdf-start.final_input_data.customers` cust 
+        output_1 = pipeline | "Read from customer and orders tables" >> beam.io.ReadFromBigQuery(query="""select cust.CUST_TIER_CODE,orders.SKU,sum(orders.ORDER_AMT) as TOTAL_SALES_AMOUNT from `york-cdf-start.final_input_data.customers` cust 
                                                                                             join `york-cdf-start.final_input_data.orders` orders
                                                                                             on cust.CUSTOMER_ID = orders.CUSTOMER_ID
                                                                                             group by cust.CUST_TIER_CODE,orders.SKU""",
@@ -67,10 +67,11 @@ if __name__ == '__main__':
                                                                                     use_standard_sql=True)
 
         total_sales_transformed_output = output_1 | beam.ParDo(Transform_order_total())
+
         total_sales_transformed_output | "Write to bigquery second table" >> beam.io.WriteToBigQuery(
             table_spec_sales,
             schema=table_schema_sales,
             create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
             write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE
         )
-    print("final Done")
+
