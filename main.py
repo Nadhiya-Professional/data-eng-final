@@ -73,4 +73,4 @@ if __name__ == '__main__':
             create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
             write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE
         )
-    print("Done")
+    print("final Done")
