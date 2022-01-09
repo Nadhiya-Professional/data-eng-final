@@ -49,7 +49,7 @@ if __name__ == '__main__':
                                                                                     join `york-cdf-start.final_input_data.product_views` product 
                                                                                     on product.CUSTOMER_ID = cust.CUSTOMER_ID
                                                                                     group by cust.CUST_TIER_CODE,product.SKU""",
-                                                                                project ="york-cdf-start",use_standard_sql=True)
+                                                                                    project ="york-cdf-start",use_standard_sql=True)
 
         cust_tier_transformed_output = output | beam.ParDo(Transform_cust_tier_code())
 
@@ -63,8 +63,8 @@ if __name__ == '__main__':
                                                                                             join `york-cdf-start.final_input_data.orders` orders
                                                                                             on cust.CUSTOMER_ID = orders.CUSTOMER_ID
                                                                                             group by cust.CUST_TIER_CODE,orders.SKU""",
-                                                                                    project="york-cdf-start",
-                                                                                    use_standard_sql=True)
+                                                                                            project="york-cdf-start",
+                                                                                            use_standard_sql=True)
 
         total_sales_transformed_output = output_1 | beam.ParDo(Transform_order_total())
 
