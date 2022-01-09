@@ -56,8 +56,7 @@ if __name__ == '__main__':
         cust_tier_trasnformed_output | "Write to bigquery" >> beam.io.WriteToBigQuery(
             table_spec_product,
             schema=table_schema,
-            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
-            write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE
+            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED
         )
         output_1 = pipeline | "Read from three tables" >> beam.io.ReadFromBigQuery(query="""select cust.CUST_TIER_CODE,orders.SKU,sum(orders.ORDER_AMT) as TOTAL_SALES_AMOUNT from `york-cdf-start.final_input_data.customers` cust 
                                                                                             join `york-cdf-start.final_input_data.orders` orders
@@ -70,7 +69,6 @@ if __name__ == '__main__':
         total_sales_transformed_output | "Write to bigquery second table" >> beam.io.WriteToBigQuery(
             table_spec_sales,
             schema=table_schema_sales,
-            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED,
-            write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE
+            create_disposition=beam.io.BigQueryDisposition.CREATE_IF_NEEDED
         )
-    print("Finished final")
+  
