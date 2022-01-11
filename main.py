@@ -40,9 +40,10 @@ if __name__ == '__main__':
             {'name': 'total_sales_amount', 'type': 'float', 'mode': 'Required'}
         ]
     }
-    pipeline_options = PipelineOptions(region="us-central1",runner = "DataflowRunner",temp_location="gs://york_temp_files",
-                                       project="york-cdf-start", job_name="dataflow-nadhiya-final-new",
-                                       staging_location="gs://york_temp_files/staging")
+
+    pipeline_options = PipelineOptions(region = "us-central1", runner = "DataflowRunner", temp_location = "gs://york_temp_files",
+                                       project = "york-cdf-start", job_name = "dataflow-nadhiya-final-new",
+                                       staging_location = "gs://york_temp_files/staging")
 
     with beam.Pipeline(options=pipeline_options) as pipeline:
         output = pipeline | "Read from customer and product view tables" >> beam.io.ReadFromBigQuery(query=""" select cust.CUST_TIER_CODE,product.SKU, count(*) as total_no_of_product_views from `york-cdf-start.final_input_data.customers` cust 
